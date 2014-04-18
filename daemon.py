@@ -57,7 +57,10 @@ def _app_main ():
         sys.stdout.flush()
         c = c + 1
         time.sleep(1)
-        print urllib2.urlopen('http://kick.cncore.com/test.php?arg1=1&arg2=2').read()
+        try:
+            print urllib2.urlopen('http://cncore.com/test.php?arg1=1&arg2=2').read()
+        except OSError, e:
+            sys.stderr.write("connection failed: (%d) %s\n" % (e.errno, e.strerror))
 
 if __name__ == "__main__":
     daemonize('/dev/null','/tmp/daemon.log','/tmp/daemon.log')

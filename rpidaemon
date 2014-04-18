@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import sys, os
+import sys, os, urllib2
 
 ''' Module to fork the current process as a daemon.
     Note: don't do any of this if your daemon get started by inetd!
@@ -44,7 +44,7 @@ def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
     os.dup2(so.fileno(), sys.stdout.fileno())
     os.dup2(se.fileno(), sys.stderr.fileno())
 
-def _example_main ():
+def _app_main ():
     ''' Example main function: print a count & timestamp each second '''
 
     import time
@@ -57,7 +57,11 @@ def _example_main ():
         sys.stdout.flush()
         c = c + 1
         time.sleep(1)
+        try:
+            print urllib2.urlopen('http://cncore.com/test.php?arg1=1&arg2=2').read()
+        except OSError, e:
+            sys.stderr.write("connection failed: (%d) %s\n" % (e.errno, e.strerror))
 
 if __name__ == "__main__":
     daemonize('/dev/null','/tmp/daemon.log','/tmp/daemon.log')
-    _example_main()
+    _app_main()
