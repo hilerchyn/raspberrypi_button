@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import sys, os, urllib2
+import RPi.GPIO as GPIO
 
 ''' Module to fork the current process as a daemon.
     Note: don't do any of this if your daemon get started by inetd!
@@ -48,20 +49,90 @@ def _app_main ():
     ''' Example main function: print a count & timestamp each second '''
 
     import time
+    import RPi.GPIO as GPIO
+
+    button_pin_23 = 23
+    button_pin_24 = 24
+    
+    pin_23_counter = 0
+    pin_24_counter =0
+
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(button_pin_23, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(button_pin_24, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    
     sys.stdout.write('Daemon started with pid %d\n' % os.getpid())
     sys.stdout.write('Daemon stdout output\n')
     sys.stderr.write('Daemon stderr output\n')
     c = 0
+    
     while True:
-        sys.stdout.write('%d: %s\n' % (c, time.ctime()))
-        sys.stdout.flush()
-        c = c + 1
-        time.sleep(1)
-        try:
-            sys.stdout.write('%s\n' % (urllib2.urlopen('http://cncore.com/test.php?arg1=1&arg2=2').read()))
-        except OSError, e:
-            sys.stderr.write("connection failed: (%d) %s\n" % (e.errno, e.strerror))
+        
+        if (GPIO.input(button_pin_23)):
+            if(pin_23_counter==0):
+                pin_23_counter=1
+                try:
+                    print urllib2.urlopen('http://192.168.1.189:8080/led/sys/ledAction_point1.action').read()
+                except OSError, e:
+                    sys.stderr.write("connection failed: (%d) %s\n" % (e.errno, e.strerror))
+        elif (GPIO.input(button_pin_24)):
+            if(pin_24_counter==0):
+                pin_24_counter=1
+                try:
+                    print urllib2.urlopen('http://192.168.1.189:8080/led/sys/ledAction_point2.action').read()
+                except OSError, e:
+                    sys.stderr.write("connection failed: (%d) %s\n" % (e.errno, e.strerror))
+        else:
+            if(pin_23_counter > 0):
+                pin_23_counter =0
+                
+            if(pin_24_counter > 0):
+                pin_24_counter =0
+                
 
 if __name__ == "__main__":
     daemonize('/dev/null','/tmp/daemon.log','/tmp/daemon.log')
-    _app_main()
+    # _app_main()
+    import time
+   
+
+    button_pin_23 = 23
+    button_pin_24 = 24
+    
+    pin_23_counter = 0
+    pin_24_counter =0
+
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(button_pin_23, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(button_pin_24, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    
+    sys.stdout.write('Daemon started with pid %d\n' % os.getpid())
+    sys.stdout.write('Daemon stdout output\n')
+    sys.stderr.write('Daemon stderr output\n')
+    c = 0
+    
+    while True:
+        
+        if (GPIO.input(button_pin_23)):
+            if(pin_23_counter==0):
+                pin_23_counter=1
+                try:
+                    print urllib2.urlopen('http://192.168.0.106/test.php?arg1=xi&arg2=23').read()
+                except urllib2.URLError, e:
+                    print "23 connection failed"
+        elif (GPIO.input(button_pin_24)):
+            if(pin_24_counter==0):
+                pin_24_counter=1
+                try:
+                    print urllib2.urlopen('http://192.168.0.106/test.php?arg1=xi&arg2=24').read()
+                except urllib2.URLError, e:
+                    print "24 connection failed"
+        else:
+            if(pin_23_counter > 0):
+                pin_23_counter =0
+                
+            if(pin_24_counter > 0):
+                pin_24_counter =0
+                
