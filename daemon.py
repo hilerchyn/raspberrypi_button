@@ -58,7 +58,7 @@ def _app_main ():
         c = c + 1
         time.sleep(1)
         try:
-            print urllib2.urlopen('http://cncore.com/test.php?arg1=1&arg2=2').read()
+            sys.stdout.write('%s\n' % (urllib2.urlopen('http://cncore.com/test.php?arg1=1&arg2=2').read()))
         except OSError, e:
             sys.stderr.write("connection failed: (%d) %s\n" % (e.errno, e.strerror))
 
