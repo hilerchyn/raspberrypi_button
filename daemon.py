@@ -45,57 +45,8 @@ def daemonize (stdin='/dev/null', stdout='/dev/null', stderr='/dev/null'):
     os.dup2(so.fileno(), sys.stdout.fileno())
     os.dup2(se.fileno(), sys.stderr.fileno())
 
-def _app_main ():
-    ''' Example main function: print a count & timestamp each second '''
-
-    import time
-    import RPi.GPIO as GPIO
-
-    button_pin_23 = 23
-    button_pin_24 = 24
-    
-    pin_23_counter = 0
-    pin_24_counter =0
-
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(button_pin_23, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.setup(button_pin_24, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    
-    sys.stdout.write('Daemon started with pid %d\n' % os.getpid())
-    sys.stdout.write('Daemon stdout output\n')
-    sys.stderr.write('Daemon stderr output\n')
-    c = 0
-    
-    while True:
-        
-        if (GPIO.input(button_pin_23)):
-            if(pin_23_counter==0):
-                pin_23_counter=1
-                try:
-                    print urllib2.urlopen('http://192.168.1.189:8080/led/sys/ledAction_point1.action').read()
-                except OSError, e:
-                    sys.stderr.write("connection failed: (%d) %s\n" % (e.errno, e.strerror))
-        elif (GPIO.input(button_pin_24)):
-            if(pin_24_counter==0):
-                pin_24_counter=1
-                try:
-                    print urllib2.urlopen('http://192.168.1.189:8080/led/sys/ledAction_point2.action').read()
-                except OSError, e:
-                    sys.stderr.write("connection failed: (%d) %s\n" % (e.errno, e.strerror))
-        else:
-            if(pin_23_counter > 0):
-                pin_23_counter =0
-                
-            if(pin_24_counter > 0):
-                pin_24_counter =0
-                
-
 if __name__ == "__main__":
-    daemonize('/dev/null','/tmp/daemon.log','/tmp/daemon.log')
-    # _app_main()
-    import time
-   
+    daemonize('/dev/null','/dev/null','/dev/null')
 
     button_pin_23 = 23
     button_pin_24 = 24
