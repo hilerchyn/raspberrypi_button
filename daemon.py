@@ -70,14 +70,14 @@ if __name__ == "__main__":
             if(pin_23_counter==0):
                 pin_23_counter=1
                 try:
-                    print urllib2.urlopen('http://192.168.0.106/test.php?arg1=xi&arg2=23').read()
+                    print urllib2.urlopen('http://192.168.1.189:8080/led/sys/ledAction_point1.action').read()
                 except urllib2.URLError, e:
                     print "23 connection failed"
         elif (GPIO.input(button_pin_24)):
             if(pin_24_counter==0):
                 pin_24_counter=1
                 try:
-                    print urllib2.urlopen('http://192.168.0.106/test.php?arg1=xi&arg2=24').read()
+                    print urllib2.urlopen('http://192.168.1.189:8080/led/sys/ledAction_point2.action').read()
                 except urllib2.URLError, e:
                     print "24 connection failed"
         else:
