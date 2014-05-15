@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import sys, os, urllib2
+import sys, os, urllib2, time
 import RPi.GPIO as GPIO
 
 ''' Module to fork the current process as a daemon.
@@ -67,6 +67,7 @@ if __name__ == "__main__":
     while True:
         
         if (GPIO.input(button_pin_23)):
+            time.sleep(2)
             if(pin_23_counter==0):
                 pin_23_counter=1
                 try:
@@ -74,6 +75,7 @@ if __name__ == "__main__":
                 except urllib2.URLError, e:
                     print "23 connection failed"
         elif (GPIO.input(button_pin_24)):
+            time.sleep(2)
             if(pin_24_counter==0):
                 pin_24_counter=1
                 try:
